@@ -27,8 +27,7 @@ const chunks = await splitter.createDocuments([text]);
 console.log(`✅ Total Chunks: ${chunks.length}`);
 
 //// ✅ **Embeddings using a Better Model (all-mpnet-base-v2)**
-const embedder = await pipeline("feature-extraction", "Xenova/all-distilroberta-v1", { quantized: true });
- // 768-dim
+const embedder = await pipeline("feature-extraction", "Xenova/all-mpnet-base-v2"); // 768-dim
 
 const embedText = async (text) => {
   try {

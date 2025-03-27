@@ -19,7 +19,9 @@ let embedder; // Define outside
 const loadModel = async () => {
   if (!embedder) {
     console.log("⏳ Loading embedding model...");
-    embedder = await pipeline("feature-extraction", "Xenova/all-mpnet-base-v2", { quantized: true });
+   // embedder = await pipeline("feature-extraction", "Xenova/all-mpnet-base-v2", { quantized: true });
+     embedder = await pipeline("feature-extraction", "Xenova/all-distilroberta-v1", { quantized: true });
+
     console.log("✅ Model loaded!");
   }
 };
