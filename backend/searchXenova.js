@@ -15,19 +15,21 @@ const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
 const index = pinecone.index("chatagent-xenova");
 const SEG_API_KEY = process.env.SEGMIND_API_KEY;
 
-// Load embedding model
-console.log("⏳ Loading embedding model...");
-//const embedder = await pipeline("feature-extraction", "Xenova/all-mpnet-base-v2");
-const embedder = await pipeline("feature-extraction", "Xenova/all-mpnet-base-v2", { quantized: true });
+let embedder; // Define outside
+const loadModel = async () => {
+  if (!embedder) {
+    console.log("⏳ Loading embedding model...");
+    embedder = await pipeline("feature-extraction", "Xenova/all-mpnet-base-v2", { quantized: true });
+    console.log("✅ Model loaded!");
+  }
+};
 
-
-console.log("✅ Model loaded!");
-
-// Convert text into embedding vector
 const embedText = async (text) => {
+  await loadModel(); // Ensure model is loaded
   const embedding = await embedder(text, { pooling: "mean", normalize: true });
   return Array.from(embedding.data);
 };
+
 
 // 1️⃣ Retrieve relevant context from Pinecone
 async function searchEmbedding(query) {
