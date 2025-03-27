@@ -5,7 +5,7 @@
   "main": "backend/searchXenova.js",
   "type": "module",
   "scripts": {
-    "start": "node backend/searchXenova.js",
+    "start": "node -r dotenv/config backend/searchXenova.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,16 +20,11 @@
   },
   "homepage": "https://github.com/ashishkummar/chatAgent_Segmind#readme",
   "dependencies": {
-    "@pinecone-database/pinecone": "^5.1.1",
-    "@xenova/transformers": "^2.17.2",
-    "axios": "^1.8.4",
-    "docx-parser": "^0.2.1",
-    "docx4js": "^3.3.0",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "fs": "^0.0.1-security",
-    "langchain": "^0.3.19",
-    "mammoth": "^1.9.0",
-    "word-extractor": "^1.0.4"
+    "@pinecone-database/pinecone": "5.1.1",
+    "@xenova/transformers": "2.17.2",
+    "axios": "1.8.4",
+    "dotenv": "16.4.7",
+    "express": "4.21.2",
+    "langchain": "0.3.19"
   }
 }
