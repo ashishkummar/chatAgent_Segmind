@@ -1,4 +1,4 @@
-const API = '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'
+const API = ''
 
 import axios from "axios";
 
