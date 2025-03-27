@@ -17,7 +17,10 @@ const SEG_API_KEY = process.env.SEGMIND_API_KEY;
 
 // Load embedding model
 console.log("⏳ Loading embedding model...");
-const embedder = await pipeline("feature-extraction", "Xenova/all-mpnet-base-v2");
+//const embedder = await pipeline("feature-extraction", "Xenova/all-mpnet-base-v2");
+const embedder = await pipeline("feature-extraction", "Xenova/all-mpnet-base-v2", { quantized: true });
+
+
 console.log("✅ Model loaded!");
 
 // Convert text into embedding vector
