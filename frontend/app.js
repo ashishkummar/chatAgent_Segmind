@@ -47,7 +47,7 @@ async function sendQueryToBackend(query) {
         console.log("🔎 Generating embedding...");
         const embedding = await embedder(query, { pooling: "mean", normalize: true });
 
-        const response = await fetch("http://localhost:5000/query", {
+        const response = await fetch("https://chatagentsegmind-production.up.railway.app/query", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ query, embedding: Array.from(embedding.data) })
