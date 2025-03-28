@@ -14,7 +14,7 @@ const extractText = async (filePath) => {
   return result.value;
 };
 
-const text = await extractText("data/Doc2.docx");
+const text = await extractText("data/Doc3.docx");
 console.log("Extracted Text:", text.substring(0, 500)); // Preview first 500 chars
 
 /// ✅ **Splitting Text into Chunks (Optimized)**
