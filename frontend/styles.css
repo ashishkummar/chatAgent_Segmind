@@ -125,3 +125,24 @@ code {
     font-size: 14px;
     color: #333;
 }
+
+#topicSelector {
+    padding: 15px;
+    background: #f8f9fa;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+#topicSelector label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+#topic {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}

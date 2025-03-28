@@ -1,6 +1,7 @@
 import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers";
 
 let embedder = null;
+let indexName = document.getElementById("topic").value; // Get the initial selected value
 
 // Function to load model
 async function loadModel() {
@@ -16,14 +17,20 @@ async function loadModel() {
 // Load model on page load
 loadModel();
 
+// Update indexName when dropdown changes
+document.getElementById("topic").addEventListener("change", (event) => {
+    indexName = event.target.value;
+    console.log("🔄 Updated indexName:", indexName);
+});
+
 // Function to append message to chat
 function addMessage(content, type) {
     const chatBox = document.getElementById("chatBox");
     const message = document.createElement("div");
     message.classList.add("message", type);
-    message.innerHTML = refineMessage(content); // Use innerHTML to retain formatting
+    message.innerHTML = refineMessage(content);
     chatBox.appendChild(message);
-    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 // Function to send query to backend
@@ -37,7 +44,6 @@ async function sendQueryToBackend(query) {
             return;
         }
 
-        // Show user message
         addMessage(query, "user");
 
         askButton.disabled = true;
@@ -50,7 +56,11 @@ async function sendQueryToBackend(query) {
         const response = await fetch("https://chatagentsegmind-production.up.railway.app/query", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ query, embedding: Array.from(embedding.data) })
+            body: JSON.stringify({ 
+                query, 
+                embedding: Array.from(embedding.data),
+                indexName // Send indexName dynamically based on selection
+            })
         });
 
         const data = await response.json();
@@ -61,8 +71,6 @@ async function sendQueryToBackend(query) {
         addMessage("" + data.response, "bot");
     } catch (error) {
         console.error("❌ Error:", error);
-
-        // Remove "Thinking..." and show error
         const chatBox = document.getElementById("chatBox");
         chatBox.removeChild(chatBox.lastChild);
         addMessage("❌ Error fetching response.", "bot");
@@ -81,25 +89,18 @@ document.getElementById("askBtn").addEventListener("click", async () => {
     }
 });
 
-// Refine message to wrap JS code inside ```js ... ```
+// Refine message formatting
 function refineMessage(msg) {
-    // Extract all JS or JavaScript code blocks between ```js or ```javascript and ```
     const matches = msg.match(/```(js|javascript)([\s\S]*?)```/g);
-
-    // If JS/JavaScript code is found, replace each occurrence
     if (matches) {
         matches.forEach(match => {
-            const jsCode = match.replace(/```(js|javascript)|```/g, "").trim(); // Extract clean JS code
+            const jsCode = match.replace(/```(js|javascript)|```/g, "").trim();
             const jsWrapped = `<div class="code-container"><pre><code class="language-js">${jsCode}</code></pre></div>`;
             msg = msg.replace(match, jsWrapped);
         });
     }
 
-    // Handle inline code (`...`)
     msg = msg.replace(/`([^`]+)`/g, "<code>$1</code>");
-
-    // Handle line breaks properly (preserve them for regular text)
     msg = msg.replace(/\n/g, "<br>");
-
     return msg;
 }

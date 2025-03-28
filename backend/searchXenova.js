@@ -14,7 +14,6 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
     "http://127.0.0.1:5500",
     "https://creative.exponential.com"
- 
 ];
 
 app.use(cors({
@@ -33,7 +32,6 @@ app.use(cors({
 app.use(express.json());
 
 const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
-const index = pinecone.index("chatagent-xenova");
 
 let embedder;
 
@@ -51,8 +49,9 @@ const embedText = async (text) => {
     return Array.from(embedding.data);
 };
 
-const searchEmbedding = async (query) => {
+const searchEmbedding = async (query, indexName) => {
     try {
+        const index = pinecone.index(indexName); // ✅ Use dynamic indexName
         const queryEmbedding = await embedText(query);
         const response = await index.namespace("ns1").query({
             topK: 5,
@@ -99,13 +98,17 @@ const querySegmind = async (query, context) => {
 };
 
 app.post("/query", async (req, res) => {
-    const { query } = req.body;
+    const { query, indexName } = req.body;
+    
     if (!query) {
         return res.status(400).json({ error: "Query is required" });
     }
+    if (!indexName) {
+        return res.status(400).json({ error: "Index name is required" });
+    }
 
-    console.log("🔎 Searching Pinecone...");
-    const context = await searchEmbedding(query);
+    console.log(`🔎 Searching Pinecone in index: ${indexName}...`);
+    const context = await searchEmbedding(query, indexName);
 
     console.log("🤖 Querying Segmind AI...");
     const finalResponse = await querySegmind(query, context);
